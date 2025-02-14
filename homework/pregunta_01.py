@@ -5,8 +5,37 @@
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
 
+import pandas as pd
+import os
+
+def create(input, output):
+    data = []
+    for feel in ['positive', 'negative', 'neutral']:
+        ruta = os.path.join(input, feel)
+        if os.path.exists(ruta):  
+            for nombre_archivo in os.listdir(ruta):
+                if nombre_archivo.endswith('.txt'):
+                    with open(os.path.join(ruta, nombre_archivo), 'r') as archivo:
+                        frase = archivo.read().strip()
+                        data.append({'phrase': frase, 'target': feel})
+    
+    df = pd.DataFrame(data)
+    df.to_csv(output, index=False)
+
 
 def pregunta_01():
+
+        # Crear el directorio de salida si no existe
+    os.makedirs('files/output', exist_ok=True)
+
+    # Crear train_dataset.csv
+    create('files/input/train', 'files/output/train_dataset.csv')
+
+    # Crear test_dataset.csv
+    create('files/input/test', 'files/output/test_dataset.csv')
+
+
+
     """
     La información requerida para este laboratio esta almacenada en el
     archivo "files/input.zip" ubicado en la carpeta raíz.
